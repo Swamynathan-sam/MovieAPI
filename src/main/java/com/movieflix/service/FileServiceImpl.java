@@ -1,5 +1,6 @@
 package com.movieflix.service;
 
+import com.movieflix.exceptions.FileExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,9 @@ public class FileServiceImpl implements FileService{
         File f= new File(path);
         if(!f.exists()){
             f.mkdir();
+        }
+        if (Files.exists(Paths.get(filePath))) {
+            throw new FileExistsException("File already exists! Please enter another file name!");
         }
         Files.copy(file.getInputStream(), Paths.get(filePath));
         return fileName;
