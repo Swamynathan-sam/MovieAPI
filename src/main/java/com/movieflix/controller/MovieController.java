@@ -3,6 +3,7 @@ package com.movieflix.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movieflix.dto.MovieDto;
+import com.movieflix.exceptions.EmptyFileException;
 import com.movieflix.service.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +29,16 @@ public class MovieController {
                                                     @RequestPart String movieDto) throws IOException {
 //        MovieDto response = movieService.addMovie(convertToMovieDto(movieDto), file);
 
+        if(file.isEmpty()){
+            throw new EmptyFileException("File is empty! Please send another file!");
+        }
         MovieDto dto = convertToMovieDto(movieDto);
         return new ResponseEntity<>(movieService.addMovie(dto,file), HttpStatus.CREATED);
     }
 
-    @GetMapping("{movieId}")
+    @GetMapping("/{movieId}")
     public ResponseEntity<MovieDto> getMovieHandler(@PathVariable Integer movieId){
-       return new ResponseEntity<>(movieService.getMovie(movieId),HttpStatus.OK);
+       return ResponseEntity.ok(movieService.getMovie(movieId));
     }
 
     @GetMapping("/allMovies")
@@ -48,9 +52,9 @@ public class MovieController {
                                                        @RequestPart MultipartFile file,
                                                        @RequestPart String movieDtoObj
                                                        ) throws IOException {
-        if(file.isEmpty())file=null;
+        if(file.isEmpty()) file=null;
         MovieDto movieDto = convertToMovieDto(movieDtoObj);
-        return new ResponseEntity<>(movieService.updateMovie(movieId,movieDto,file),HttpStatus.CREATED);
+        return ResponseEntity.ok(movieService.updateMovie(movieId, movieDto, file));
     }
 
     @DeleteMapping("/delete/{movieId}")

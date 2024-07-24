@@ -17,7 +17,7 @@ public class FileServiceImpl implements FileService{
         String fileName = file.getOriginalFilename();
 
         //to  get the file path
-        String filePath = path + File.pathSeparator + fileName;
+        String filePath = path + File.separator + fileName;
 
         //create file object
         File f= new File(path);
@@ -37,7 +37,7 @@ public class FileServiceImpl implements FileService{
     @Override
     public InputStream getResourceFile(String path, String fileName) throws FileNotFoundException {
 
-        String filePath = path + File.pathSeparator + fileName;
+        String filePath = path + File.separator + fileName;
         return new FileInputStream(filePath);
     }
 }
